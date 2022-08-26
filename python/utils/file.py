@@ -1,4 +1,5 @@
 from os import makedirs, path
+from codecs import decode
 
 
 def handle_file(file_name='', mode='', encoding='utf-8', *args, **kwargs) -> None:
@@ -56,3 +57,22 @@ def open_file(file_name='', default_value=''):
         result['data'] = f.read()
 
     return result['data']
+
+
+def change_content(file_name=None, content=None):
+    assert file_name != None and content != None
+    content = decode(content, 'unicode_escape')
+    if not path.exists(file_name):
+        open_file(file_name, content)
+    else:
+        handle_file(file_name, 'w')(lambda f: f.write(content))
+
+
+if __name__ == '__main__':
+    import sys
+    _, fn, *args = sys.argv
+
+    try:
+        globals()[fn](*args)
+    except AttributeError as _e:
+        print(str(_e))
