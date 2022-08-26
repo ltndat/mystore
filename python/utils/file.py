@@ -71,6 +71,7 @@ def change_content(file_name=None, content=None):
 if __name__ == '__main__':
     import sys
     _, fn, *args = sys.argv
+    print(fn, args)
 
     try:
         globals()[fn](*args)
