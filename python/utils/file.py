@@ -1,3 +1,5 @@
+"""High level api to handle file
+"""
 from os import makedirs, path
 from codecs import decode
 
@@ -60,6 +62,13 @@ def open_file(file_name='', default_value=''):
 
 
 def change_content(file_name=None, content=None):
+    """Change file content
+    
+    Example:
+    ```python
+    change_content('tmp', 'hello world')
+    ```
+    """
     assert file_name != None and content != None
     content = decode(content, 'unicode_escape')
     if not path.exists(file_name):
