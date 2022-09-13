@@ -1,6 +1,6 @@
 import json
 
-from ..utils import file
+from . import file
 
 
 data = {}

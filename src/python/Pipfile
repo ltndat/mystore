@@ -1,5 +1,6 @@
 [scripts]
-build = "pyinstaller __main__.py --windowed --add-data 'assets;assets' -n $APP_NAME"
+# build = "pyinstaller __main__.py --windowed --icon assets/icon.ico --add-data 'assets;assets' -n $APP_NAME"
+build = "pyinstaller __main__.py --windowed -n $APP_NAME"
 dev = "pymon --all __main__.py"
 start = "python __main__.py"
 test = "python -m pytest test"
