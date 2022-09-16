@@ -40,6 +40,11 @@ def new_file(file_name=''):
     handle_file(file_name, 'x')()
 
 
+def new_folder(path_name=''):
+    if not path.exists(path_name):
+        makedirs(path_name)
+
+
 def open_file(file_name='', default_value=''):
     """Open file and create it in nested folder if necessary `python.utils.file`
 
@@ -63,7 +68,7 @@ def open_file(file_name='', default_value=''):
 
 def change_content(file_name=None, content=None):
     """Change file content
-    
+
     Example:
     ```python
     change_content('tmp', 'hello world')
