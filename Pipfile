@@ -7,6 +7,8 @@ verify_ssl = true
 test = "python -m pytest src/test"
 
 [packages]
+toml = "*"
+pyyaml = "*"
 
 [dev-packages]
 autopep8 = "*"

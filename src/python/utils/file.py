@@ -1,7 +1,14 @@
 """High level api to handle file
+
+Support `json` `xml` `toml` file handle
 """
 from os import makedirs, path
 from codecs import decode
+
+C = 'create'
+R = 'get'
+U = 'edit'
+D = 'delete'
 
 
 def handle_file(file_name='', mode='', encoding='utf-8', *args, **kwargs) -> None:
@@ -45,6 +52,32 @@ def new_folder(path_name=''):
         makedirs(path_name)
 
 
+def remove_file(file_name=''):
+    if path.exists(file_name):
+        from os import remove
+        remove(file_name)
+
+
+def remove_folder(path_name=''):
+    if path.exists(path_name):
+        from shutil import rmtree
+        rmtree(path)
+
+
+def copy_file(src=None, target=None):
+    assert src is not None and target is not None
+    if path.exists(src):
+        from shutil import copyfile
+        copyfile(src, target)
+
+
+def copy_folder(src=None, target=None):
+    assert src is not None and target is not None
+    if path.exists(src):
+        from shutil import copytree
+        copytree(src, target)
+
+
 def open_file(file_name='', init_value=''):
     """Open file and create it in nested folder if necessary `python.utils.file`
 
@@ -66,7 +99,7 @@ def open_file(file_name='', init_value=''):
     return result['data']
 
 
-def change_content(file_name=None, content=None):
+def replace_content(file_name=None, content=None):
     """Change file content
 
     Example:
@@ -83,10 +116,13 @@ def change_content(file_name=None, content=None):
 
 
 if __name__ == '__main__':
-    import sys
-    _, fn, *args = sys.argv
+    from sys import argv
 
-    try:
-        globals()[fn](*args)
-    except AttributeError as _e:
-        print(str(_e))
+    if len(argv) > 1:
+        _, fn, *args = argv
+        try:
+            globals()[fn](*args)
+        except AttributeError as _e:
+            print(str(_e))
+    else:
+        print(f'{path.basename(__file__)} API')
