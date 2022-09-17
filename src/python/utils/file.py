@@ -11,7 +11,7 @@ def handle_file(file_name='', mode='', encoding='utf-8', *args, **kwargs) -> Non
     Example:
     ```python
     handle_file(file_name, 'x')()
-    handle_file(file_name, 'w')(lambda f: f.write(default_value))
+    handle_file(file_name, 'w')(lambda f: f.write(init_value))
     ```
     """
     def deco(handler=lambda *a: a, error_handler=lambda *a: a):
@@ -45,7 +45,7 @@ def new_folder(path_name=''):
         makedirs(path_name)
 
 
-def open_file(file_name='', default_value=''):
+def open_file(file_name='', init_value=''):
     """Open file and create it in nested folder if necessary `python.utils.file`
 
     Example:
@@ -55,7 +55,7 @@ def open_file(file_name='', default_value=''):
     """
     if not path.exists(file_name):
         new_file(file_name)
-        handle_file(file_name, 'w')(lambda f: f.write(default_value))
+        handle_file(file_name, 'w')(lambda f: f.write(init_value))
 
     result = {}
 
