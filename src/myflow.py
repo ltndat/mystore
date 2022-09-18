@@ -1,24 +1,19 @@
-"""Json file handle, support cli and standalone
+"""Base on python 3
+
+Standalone
+Support all my method for my devflows
 """
-import json as parser
+
+API_NAME = 'myflow'
 
 
-C = 'create'
-R = 'get'
-U = 'edit'
-D = 'delete'
-
-
-def Json(file_name=None, method=R, *args, **kwargs):
-    assert file_name != None and path.exists(file_name)
-    import json as handler
+def file(method=None, *args, **kwargs):
+    """Subcommmand support
+    """
+    assert method is not None
 
     def get(key=None):
         assert key is not None
-
-    def create(): pass
-    def edit(): pass
-    def delete(): pass
 
     try:
         print(locals()[method])
@@ -29,7 +24,6 @@ def Json(file_name=None, method=R, *args, **kwargs):
 
 if __name__ == '__main__':
     from sys import argv
-    from os import path
 
     if len(argv) > 1:
         _, fn, *args = argv
@@ -38,4 +32,4 @@ if __name__ == '__main__':
         except AttributeError as _e:
             print(str(_e))
     else:
-        print(f'{path.basename(__file__)} API')
+        print(f'{API_NAME} API')
