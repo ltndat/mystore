@@ -1,15 +1,13 @@
 """Base on python 3
 
-Standalone
+Standalone, subcommmand support
 Support all my method for my devflows
 """
 
-API_NAME = 'myflow'
+API_NAME = 'myflow.py'
 
 
 def file(method=None, *args, **kwargs):
-    """Subcommmand support
-    """
     assert method is not None
 
     def get(key=None):
@@ -24,8 +22,6 @@ def file(method=None, *args, **kwargs):
 
 if __name__ == '__main__':
     from sys import argv
-    print(f'myflow infomation: {argv}')
-
     if len(argv) > 1:
         _, fn, *args = argv
         try:
@@ -33,4 +29,4 @@ if __name__ == '__main__':
         except AttributeError as _e:
             print(str(_e))
     else:
-        print(f'{API_NAME} API')
+        print(f'{API_NAME} API contains all methods for my devflows')
