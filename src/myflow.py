@@ -24,6 +24,7 @@ def file(method=None, *args, **kwargs):
 
 if __name__ == '__main__':
     from sys import argv
+    print(f'myflow infomation: {argv}')
 
     if len(argv) > 1:
         _, fn, *args = argv
