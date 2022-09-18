@@ -5,11 +5,6 @@ Support `json` `xml` `toml` file handle
 from os import makedirs, path
 from codecs import decode
 
-C = 'create'
-R = 'get'
-U = 'edit'
-D = 'delete'
-
 
 def handle_file(file_name='', mode='', encoding='utf-8', *args, **kwargs) -> None:
     """My handle file and folder `python.utils.file`

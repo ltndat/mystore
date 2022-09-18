@@ -1,24 +1,23 @@
 """Json file handle, support cli and standalone
 """
 import json as parser
+from os import path
 
 
-def Json(file_name=None, method=R, *args, **kwargs):
-    assert file_name != None and path.exists(file_name)
-    import json as handler
+C = 'create'
+R = 'get'
+U = 'edit'
+D = 'delete'
 
-    def get(key=None):
-        assert key is not None
 
-    def create(): pass
-    def edit(): pass
-    def delete(): pass
+def get(file_name=None, key=None):
+    assert path.exists(file_name)
+    assert key is not None
 
-    try:
-        print(locals()[method])
-        locals()[method](*args, **kwargs)
-    except KeyError as e:
-        print(f'Not support method {str(e)}')
+
+def create(): pass
+def edit(): pass
+def delete(): pass
 
 
 if __name__ == '__main__':
