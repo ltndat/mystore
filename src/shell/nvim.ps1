@@ -5,6 +5,9 @@ if ($IsWindows) {
   # remote config
   rm $env:LOCALAPPDATA\nvim
   ln "$env:USERPROFILE\.config\myapps\nvim" "$env:LOCALAPPDATA\nvim"
+
+  scoop bucket add main
+  scoop install gcc tree-sitter
 } else {
   git clone --depth 1 https://github.com/wbthomason/packer.nvim\
   ~/.local/share/nvim/site/pack/packer/start/packer.nvim
@@ -12,4 +15,6 @@ if ($IsWindows) {
   # remote config
   rm -f ~/.config/nvim
   ln ~/.config/myapps/nvim ~/.config/nvim
+
+  brew install gcc tree-sitter
 }
