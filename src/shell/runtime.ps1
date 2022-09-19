@@ -12,4 +12,14 @@ if ($IsWindows) {
   if ($IsWsl -eq $false) { brew install --cask visual-studio-code }
 }
 
+# python
+pip install pipenv autopep8
+
+# nodejs
+if ($IsWindows) {
+  npm -g install yarn
+} else {
+  sudo npm -g install yarn
+}
+
 git config --global credential.helper store

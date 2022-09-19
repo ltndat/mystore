@@ -57,7 +57,7 @@ def __options_help():
     from inspect import signature
     print('All methods support:\n')
     for _i in __cli_methods():
-        print(f'{_i.__name__}{signature(_i)}')
+        print(f'{_i.__name__}{signature(_i).parameters}')
 
 
 Store = {
