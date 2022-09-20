@@ -162,6 +162,14 @@ def file(method=None, *args, **kwargs):
         locals()[method](*args, **kwargs)
     except KeyError as e:
         print(f'Not support method {str(e)}')
+
+def get_pid():
+    import psutil
+    result = []
+    for proc in psutil.process_iter():
+    if process_name in proc.name():
+       result.append(proc.pid)
+
 # ---------------------------------------------------------------------------------
 
 

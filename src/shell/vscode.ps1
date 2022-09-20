@@ -10,7 +10,7 @@ if ($app_dir -eq "") {
 
 # link folder vscode to myapps
 rm -r -fo $app_dir/User
-ln "$env:HOME/.config/myapps/vscode" "$app_dir/User"
+ln "$env:HOME/.config/myapps/vscode" "$app_dir/data/user-data/User"
 
 # install extensions
 foreach ($i in $(cat $env:HOME/.config/myapps/vscode/extensions.json | ConvertFrom-Json)) 
