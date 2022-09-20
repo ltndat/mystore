@@ -1,1 +1,3 @@
-microsoft-windows-terminal unikey f.lux
+microsoft-windows-terminal
+unikey
+f.lux

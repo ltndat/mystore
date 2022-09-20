@@ -1,1 +1,6 @@
-unikey f.lux googlechrome vlc winrar revo-uninstaller
+unikey
+f.lux
+googlechrome
+vlc
+winrar
+revo-uninstaller
