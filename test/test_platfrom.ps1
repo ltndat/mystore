@@ -2,9 +2,9 @@ $IsWsl = ($env:WSL_DISTRO_NAME -ne $null)
 
 if ($IsWindows) {
   echo 'Windows'
-} else if ($IsMacOS) {
+} elseif ($IsMacOS) {
   echo 'Mac OS'
-} else if ($IsWsl) {
+} elseif ($IsWsl) {
   echo 'Wsl'
 } else {
   echo 'Linux'
