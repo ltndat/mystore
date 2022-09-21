@@ -1,4 +1,4 @@
-$IsWsl = ($env:WSL_DISTRO_NAME -ne $null)
+$IsWsl = ($env:WSL_DISTRO_NAME -ne $null);
 
 if ($IsWindows) {
   echo 'Windows'
