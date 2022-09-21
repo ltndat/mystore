@@ -1,12 +1,16 @@
 if ($IsWindows) {
   Install-Module -Name Terminal-Icons -Repository PSGallery
-  scoop bucket add main
   scoop install oh-my-posh fzf
-  scoop update *
+  git clone https://github.com/ltndat/myshell.git $env:USERPROFILE/.config/myshell
+  git clone https://github.com/ltndat/myapps.git $env:USERPROFILE/.config/myapps
+  git clone https://github.com/ltndat/mystore.git $env:USERPROFILE/.config/mystore
 } else {
   foreach ($i in $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)) {iex $i}
   brew update
   brew install jandedobbeleer/oh-my-posh/oh-my-posh exa fzf
+  git clone https://github.com/ltndat/myshell.git ~/.config/myshell
+  git clone https://github.com/ltndat/myapps.git ~/.config/myapps
+  git clone https://github.com/ltndat/mystore.git ~/.config/mystore
 }
 
 Install-Module -Name z
@@ -16,6 +20,5 @@ Install-Module PSFzf -Scope CurrentUser -Force
 # Link config 
 New-Item -Path $(Split-Path $PROFILE.CurrentUserCurrentHost -Parent) -ItemType "directory"
 echo '. ~/.config/myshell/config.ps1' > $PROFILE.CurrentUserCurrentHost
-echo 'config successfully!'
 # python $PSScriptRoot/change_content.py $PROFILE.CurrentUserCurrentHost '. ~/.config/myshell/config.ps1'
 pwsh

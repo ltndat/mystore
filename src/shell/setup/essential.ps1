@@ -1,9 +1,6 @@
 $IsWsl = ($env:WSL_DISTRO_NAME -ne $null)
 
 if ($IsWindows) {
-  git clone https://github.com/ltndat/myshell.git $env:USERPROFILE/.config/myshell
-  git clone https://github.com/ltndat/myapps.git $env:USERPROFILE/.config/myapps
-  git clone https://github.com/ltndat/mystore.git $env:USERPROFILE/.config/mystore
   scoop bucket add main
   scoop bucket add extras
   scoop install wget msys2 sudo nodejs python vscode neovim
