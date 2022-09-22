@@ -1,0 +1,4 @@
+sevenzip
+python
+node
+neovim

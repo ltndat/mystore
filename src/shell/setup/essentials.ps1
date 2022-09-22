@@ -1,15 +1,27 @@
 $IsWsl = ($env:WSL_DISTRO_NAME -ne $null)
+$store = "https://raw.githubusercontent.com/ltndat/mystore/main/src"
+
+Function exist ($cmdname) {
+  if ($cmdname) {
+    return [bool](Get-Command -Name $cmdname -ErrorAction SilentlyContinue)
+  }
+}
+
+function list_to_line ($host_file) {
+  return $(curl -fsSL $host_file | Join-String -Separator ' ')
+}
 
 function setup_runtime {
   if ($IsWindows) {
     scoop bucket add extras
+    scoop install $(list_to_line "$store/static/scoop_listapps.txt")
+    scoop update *
     scoop install msys2 sudo nodejs python vscode neovim
   } else {
     foreach ($i in $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)) {iex $i}  
+    brew update
     brew install python node neovim
-    if ($IsMacOS) {
-      brew install --cask visual-studio-code 
-    }
+    if ($IsMacOS) { brew install --cask visual-studio-code }
     # set alias
     sudo ln -sf (which python3) /usr/local/bin/python
   }
@@ -40,7 +52,6 @@ function setup_pwsh {
     git clone https://github.com/ltndat/mystore.git $env:USERPROFILE/.config/mystore
   } else {
     foreach ($i in $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)) {iex $i}
-    brew update
     brew install jandedobbeleer/oh-my-posh/oh-my-posh exa fzf
     git clone https://github.com/ltndat/myshell.git ~/.config/myshell
     git clone https://github.com/ltndat/myapps.git ~/.config/myapps

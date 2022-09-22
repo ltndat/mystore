@@ -1,0 +1,6 @@
+7zip
+msys2
+nodejs
+python
+vscode
+neovim
