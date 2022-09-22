@@ -3,7 +3,8 @@
 Standalone, subcommmand support
 Support all my method for my devflows
 """
-MESSAGE = 'myflow.py script contains all methods for my devflows'
+
+MESSAGE = '[My Flow] script contains all methods for my devflows (no require modules)'
 
 
 # Utils ---------------------------------------------------------------------------
@@ -20,6 +21,19 @@ def __parse_argv():
         else:
             args.append(_i)
     return args, kwargs
+
+
+def __format_stdout(label='Stdout', data=None):
+    assert data is not None
+    return f'--------------------------------------------\n{label}\n--------------------------------------------\n{data}'
+
+
+def __parse_process_syntax(cmds):
+    return [i.strip() for i in ''.join(cmds).split(';') if i.strip()]
+
+
+def __parse_stdout(b):
+    return b.decode("utf-8")
 
 
 def __handle_file(file_name='', mode='', encoding='utf-8', *args, **kwargs) -> None:
@@ -55,9 +69,13 @@ def __handle_file(file_name='', mode='', encoding='utf-8', *args, **kwargs) -> N
 # cli options methods -------------------------------------------------------------
 def __options_help():
     from inspect import signature
-    print('All methods support:\n')
+    std = ''
     for _i in __cli_methods():
-        print(f'{_i.__name__}{signature(_i).parameters}')
+        name = _i.__name__
+        while len(name) < 24:
+            name += ' '
+        std += f'{name} << {signature(_i)}\n'
+    print(__format_stdout('All methods support:', std))
 
 
 Store = {
@@ -141,7 +159,7 @@ def edit_file(file_name=None, content=None):
 
     Example:
     ```python
-    change_content('tmp', 'hello world')
+    edit_file('tmp', 'hello world')
     ```
     """
     assert file_name != None and content != None
@@ -154,6 +172,54 @@ def edit_file(file_name=None, content=None):
         __handle_file(file_name, 'w')(lambda f: f.write(content))
 
 
+def process_sequence(*cmds):
+    assert len(cmds) > 0
+    cmds = __parse_process_syntax(cmds)
+    assert len(cmds) > 0
+    import subprocess
+
+    for i, cmd in enumerate(cmds):
+        cmd = cmd.split(' ')
+        process = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        out, err = process.communicate()
+        out and print(__format_stdout(
+            f'Process [{i + 1}]: [{cmd[0]}]', __parse_stdout(out)))
+        err and print(__format_stdout(
+            f'Process [{i + 1}]: [{cmd[0]}]', __parse_stdout(err)))
+
+
+def process_parallel(*cmds):
+    assert len(cmds) > 0
+    cmds = __parse_process_syntax(cmds)
+    assert len(cmds) > 0
+    import subprocess
+    from threading import Thread
+    store = []
+
+    def run(i, cmd):
+        cmd = cmd.split(' ')
+        process = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        out, err = process.communicate()
+        out and print(__format_stdout(
+            f'Process [{i + 1}]: [{cmd[0]}]', __parse_stdout(out)))
+        err and print(__format_stdout(
+            f'Process [{i + 1}]: [{cmd[0]}]', __parse_stdout(err)))
+
+    for i, cmd in enumerate(cmds):
+        th = Thread(target=run, args=(i, cmd,))
+        store.append(th)
+        th.start()
+
+    for th in store:
+        th.join()
+
+
+def process_exit(appname=None):
+    assert appname is not None
+
+
 def file(method=None, *args, **kwargs):
     assert method is not None
 
@@ -162,13 +228,6 @@ def file(method=None, *args, **kwargs):
         locals()[method](*args, **kwargs)
     except KeyError as e:
         print(f'Not support method {str(e)}')
-
-def get_pid():
-    import psutil
-    result = []
-    for proc in psutil.process_iter():
-    if process_name in proc.name():
-       result.append(proc.pid)
 
 # ---------------------------------------------------------------------------------
 

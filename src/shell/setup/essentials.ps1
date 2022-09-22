@@ -14,7 +14,7 @@ if ($IsWindows) {
 }
 
 # python
-pip install pipenv autopep8
+pip install pipenv
 
 # nodejs
 if ($IsWindows) {
