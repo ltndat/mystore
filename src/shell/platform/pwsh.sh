@@ -20,9 +20,11 @@ if [ "$UNAME" == "Darwin" ] ; then
 #   sudo apt update && sudo apt install -y powershell
 elif [ "$distro" = "arch" ]; then
   sudo pacman -Syy
+  cd ~
   git clone https://aur.archlinux.org/powershell-bin.git
   cd powershell-bin
   makepkg -si
+  cd ..
   rm -rf powershell-bin
 # elif [ "$distro" = "kali" ]; then
 else

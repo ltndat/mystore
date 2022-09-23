@@ -58,7 +58,7 @@ function setup_pwsh {
     git clone https://github.com/ltndat/mystore.git ~/.config/mystore
   }
 
-  Install-Module -Name z
+  Install-Module -Name z -Scope CurrentUser -Force
   Install-Module PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
   Install-Module posh-git -Scope CurrentUser -Force
   Install-Module PSFzf -Scope CurrentUser -Force
