@@ -18,12 +18,12 @@ if [ "$UNAME" == "Darwin" ] ; then
 #   curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 #   sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list'
 #   sudo apt update && sudo apt install -y powershell
-# elif [ "$distro" = "arch" ]; then
-#   sudo pacman -Syy
-#   git clone https://aur.archlinux.org/powershell-bin.git
-#   cd powershell-bin
-#   makepkg -si
-#   rm -rf powershell-bin
+elif [ "$distro" = "arch" ]; then
+  sudo pacman -Syy
+  git clone https://aur.archlinux.org/powershell-bin.git
+  cd powershell-bin
+  makepkg -si
+  rm -rf powershell-bin
 # elif [ "$distro" = "kali" ]; then
 else
   wget https://aka.ms/install-powershell.sh; sudo bash install-powershell.sh; rm install-powershell.sh
