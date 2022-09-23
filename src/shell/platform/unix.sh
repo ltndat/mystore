@@ -1,6 +1,5 @@
+# get su permission
 sudo echo 'Begin'
-
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 distro=$(awk -F = '/^ID=/ {print $2}' /etc/os-release)
 UNAME=$(uname)
@@ -13,19 +12,37 @@ UNAME=$(uname)
 # 	echo "Windows"
 # fi
 
-if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ]; then
+# wsl setup
+if [ "$WSL_DISTRO_NAME" != "" ]; then
+  # Arch linux
+  if [ "$distro" = "$arch" ]; then
+    sudo echo '' >> /etc/wsl.conf
+    sudo echo '[user]' >> /etc/wsl.conf
+    sudo echo 'default=user' >> /etc/wsl.conf
+    sudo echo 'user ALL=(ALL) ALL' >> /etc/sudoers
+    sudo useradd -m user
+    sudo passwd user
+  fi
+fi
+
+if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
   sudo apt-get update -y
   sudo apt-get upgrade -y
   sudo apt-get install build-essential -y
   sudo apt-get upgrade -y
   sudo apt-get update -y
-elif [ "$distro" = "$arch" ]; then
-  sudo pacman-key --init
-  sudo pacman-key --populate
-  sudo pacman -S archlinux-keyring
+elif [ "$distro" = "arch" ]; then
   echo y | sudo pacman -Syu
 else
   echo "Unknown linux distro"
 fi
+
+# install brew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
+echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
+brew install git wget
 
 echo 'Done!'
