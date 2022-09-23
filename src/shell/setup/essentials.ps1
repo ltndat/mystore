@@ -1,42 +1,35 @@
 $IsWsl = ($env:WSL_DISTRO_NAME -ne $null)
 $store = "https://raw.githubusercontent.com/ltndat/mystore/main/src"
 
-Function exist ($cmdname) {
-  if ($cmdname) {
-    return [bool](Get-Command -Name $cmdname -ErrorAction SilentlyContinue)
-  }
-}
-
-function list_to_line ($host_file) {
+function get_list ($host_file) {
   return $(curl -fsSL $host_file | Join-String -Separator ' ')
 }
 
 function setup_runtime {
   if ($IsWindows) {
     scoop bucket add extras
-    scoop install $(list_to_line "$store/static/scoop_listapps.txt")
     scoop update *
-    scoop install msys2 sudo nodejs python vscode neovim
+    scoop install $(get_list "$store/static/scoop_listapps.txt")
   } else {
     foreach ($i in $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)) {iex $i}  
     brew update
-    brew install python node neovim
-    if ($IsMacOS) { brew install --cask visual-studio-code }
-    # set alias
-    sudo ln -sf (which python3) /usr/local/bin/python
+    brew install $(get_list "$store/static/brew_listapps.txt")
+    if ($IsMacOS) { brew install --cask $(get_list "$store/static/brew_osx_listapps.txt") }
+    sudo ln -sf (which python3)  "$(dirname (which python3))/python"
   }
 }
 
 function setup_apps {
   # python
+  curl https://bootstrap.pypa.io/get-pip.py | python
   pip install pipenv
 
   # nodejs
-  if ($IsWindows) {
-    npm -g install yarn
-  } else {
-    sudo npm -g install yarn
-  }
+  # if ($IsWindows) {
+  npm -g install yarn
+  # } else {
+  #   sudo npm -g install yarn
+  # }
 
   # git
   git config --global credential.helper store
@@ -72,4 +65,4 @@ setup_runtime
 setup_apps
 setup_pwsh
 
-echo 'Successfully run `pwsh` to refresh and enjoy'
+echo 'Update-Module; Get-Module; echo "Successfully! fresh and enjoy"' | pwsh

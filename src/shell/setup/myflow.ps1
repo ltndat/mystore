@@ -1,2 +1,7 @@
-# myflow
-pip install $(curl -fsSL https://raw.githubusercontent.com/ltndat/mystore/main/src/myflow_listmodules.txt | Join-String -Separator ' ')
+$store = "https://raw.githubusercontent.com/ltndat/mystore/main/src"
+
+function get_list ($host_file) {
+  return $(curl -fsSL $host_file | Join-String -Separator ' ')
+}
+
+pip install $(get_list "$store/static/myflow_listmodules.txt")

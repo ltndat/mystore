@@ -76,14 +76,6 @@ def __options_help():
             name += ' '
         std += f'{name} << {signature(_i)}\n'
     print(__format_stdout('All methods support:', std))
-
-
-Store = {
-    'options': {
-        '-h': __options_help,
-        '--help': __options_help
-    }
-}
 # ---------------------------------------------------------------------------------
 
 
@@ -269,6 +261,14 @@ def __cli_app__(args, kwargs):
             print(f'No support method {fn}')
     else:
         print(f'message: {MESSAGE}')
+
+
+Store = {
+    'options': {
+        '-h': __options_help,
+        '--help': __options_help
+    },
+}
 # ---------------------------------------------------------------------------------
 
 

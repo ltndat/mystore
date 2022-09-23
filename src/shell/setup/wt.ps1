@@ -9,5 +9,5 @@ if ($app_dir -eq "") {
 }
 
 # link folder vscode to myapps
-rm -r -fo $app_dir/LocalState
+rm -rf $app_dir/LocalState
 ln "$env:HOME/.config/myapps/wt" "$app_dir/LocalState"
