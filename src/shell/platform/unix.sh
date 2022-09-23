@@ -28,11 +28,11 @@ fi
 if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
   sudo apt-get update -y
   sudo apt-get upgrade -y
-  sudo apt-get install build-essential -y
+  sudo apt-get install git wget build-essential -y
   sudo apt-get upgrade -y
   sudo apt-get update -y
 elif [ "$distro" = "arch" ]; then
-  echo y | sudo pacman -Syu
+  echo y | sudo pacman -Syu git wget
 else
   echo "Unknown linux distro"
 fi
