@@ -10,6 +10,8 @@ function setup_runtime {
     scoop bucket add extras
     scoop update *
     scoop install $(get_list "$store/static/scoop_listapps.txt")
+    # msys2 linux cmd for windows
+    echo "exit;" | msys2
   } else {
     foreach ($i in $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)) {iex $i}  
     brew update
