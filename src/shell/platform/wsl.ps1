@@ -1,5 +1,6 @@
 wget https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
 ./wsl_update_x64.msi
+rm ./wsl_update_x64.msi
 scoop install archlinux
 wsl --set-default-version 2
 wsl --set-version Arch 2

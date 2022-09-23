@@ -44,13 +44,13 @@ function setup_pwsh {
     scoop install oh-my-posh fzf
     git clone https://github.com/ltndat/myshell.git $env:USERPROFILE/.config/myshell
     git clone https://github.com/ltndat/myapps.git $env:USERPROFILE/.config/myapps
-    git clone https://github.com/ltndat/mystore.git $env:USERPROFILE/.config/mystore
+    # git clone https://github.com/ltndat/mystore.git $env:USERPROFILE/.config/mystore
   } else {
     foreach ($i in $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)) {iex $i}
     brew install jandedobbeleer/oh-my-posh/oh-my-posh exa fzf
     git clone https://github.com/ltndat/myshell.git ~/.config/myshell
     git clone https://github.com/ltndat/myapps.git ~/.config/myapps
-    git clone https://github.com/ltndat/mystore.git ~/.config/mystore
+    # git clone https://github.com/ltndat/mystore.git ~/.config/mystore
   }
 
   Install-Module -Name z -Scope CurrentUser -Force

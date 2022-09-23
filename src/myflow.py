@@ -29,21 +29,23 @@ def __format_stdout(label='Stdout', data=None):
 
 
 def __parse_process_syntax(cmds):
-    return [i.strip() for i in ''.join(cmds).split(';') if i.strip()]
+    result = [i.strip() for i in ''.join(cmds).split(';') if i.strip()]
+    print(result)
+    return result
 
 
 def __parse_stdout(b):
     return b.decode("utf-8")
 
 
-def __handle_file(file_name='', mode='', encoding='utf-8', *args, **kwargs) -> None:
+def __handle_file(file_path='', mode='', encoding='utf-8', *args, **kwargs) -> None:
     """My handle file and folder `python.utils.file`
     base from `open` function
 
     Example:
     ```python
-    __handle_file(file_name, 'x')()
-    __handle_file(file_name, 'w')(lambda f: f.write(init_value))
+    __handle_file(file_path, 'x')()
+    __handle_file(file_path, 'w')(lambda f: f.write(init_value))
     ```
     """
     def deco(handler=lambda *a: a, error_handler=lambda *a: a):
@@ -52,16 +54,16 @@ def __handle_file(file_name='', mode='', encoding='utf-8', *args, **kwargs) -> N
         Example:
         ```python
         handler(file)
-        error_handler(file_name, mode, encoding,handler)
+        error_handler(file_path, mode, encoding,handler)
         ```
         """
         try:
-            f = open(file_name, mode, encoding=encoding, *args, **kwargs)
+            f = open(file_path, mode, encoding=encoding, *args, **kwargs)
             handler(f)
             f.close()
         except Exception as _e:
             print(f'Warning: {str(_e)}')
-            error_handler(file_name, mode, encoding, handler)
+            error_handler(file_path, mode, encoding, handler)
     return deco
 # ---------------------------------------------------------------------------------
 
@@ -80,7 +82,7 @@ def __options_help():
 
 
 # cli main methods ----------------------------------------------------------------
-def open_file(file_name='', init_value=''):
+def open_file(file_path=None, init_value=''):
     """Open file and create it in nested folder if necessary `python.utils.file`
 
     Example:
@@ -88,54 +90,63 @@ def open_file(file_name='', init_value=''):
     Local = open_file(f'{FOLDER}/local.json')
     ```
     """
+    assert file_path is not None
+
     from os import path
-    if not path.exists(file_name):
-        new_file(file_name)
-        __handle_file(file_name, 'w')(lambda f: f.write(init_value))
+    if not path.exists(file_path):
+        new_file(file_path)
+        __handle_file(file_path, 'w')(lambda f: f.write(init_value))
 
     result = {}
 
-    @__handle_file(file_name, 'r')
-    def _fn(f):
-        result['data'] = f.read()
+    @__handle_file(file_path, 'r')
+    def _fn(f): result['data'] = f.read()
 
     return result['data']
 
 
-def new_file(file_name=''):
+def new_file(file_path=None):
+    assert file_path is not None
+
     from os import path, makedirs
-    _f = path.dirname(file_name)
+    _f = path.dirname(file_path)
     if _f and not path.exists(_f):
-        makedirs(path.dirname(file_name))
-    __handle_file(file_name, 'x')()
+        makedirs(path.dirname(file_path))
+    __handle_file(file_path, 'x')()
 
 
-def new_folder(path_name=''):
+def new_folder(dir_path=None):
+    assert dir_path is not None
+
     from os import path, makedirs
-    if not path.exists(path_name):
-        makedirs(path_name)
+    if not path.exists(dir_path):
+        makedirs(dir_path)
 
 
-def remove_file(file_name=''):
+def remove_file(file_path=None):
+    assert file_path is not None
+
     from os import path
-    if path.exists(file_name):
+    if path.exists(file_path):
         from os import remove
-        remove(file_name)
+        remove(file_path)
 
 
-def remove_folder(path_name=''):
+def remove_folder(dir_path=None):
+    assert dir_path is not None
+
     from os import path
-    if path.exists(path_name):
+    if path.exists(dir_path):
         from shutil import rmtree
         rmtree(path)
 
 
-def copy_file(src=None, target=None):
-    assert src is not None and target is not None
+def copy_file(file_path=None, target=None):
+    assert file_path is not None and target is not None
     from os import path
-    if path.exists(src):
+    if path.exists(file_path):
         from shutil import copyfile
-        copyfile(src, target)
+        copyfile(file_path, target)
 
 
 def copy_folder(src=None, target=None):
@@ -146,7 +157,7 @@ def copy_folder(src=None, target=None):
         copytree(src, target)
 
 
-def edit_file(file_name=None, content=None):
+def edit_file(file_path=None, content=None):
     """Edit file content
 
     Example:
@@ -154,14 +165,14 @@ def edit_file(file_name=None, content=None):
     edit_file('tmp', 'hello world')
     ```
     """
-    assert file_name != None and content != None
+    assert file_path != None and content != None
     from os import path
     from codecs import decode
     content = decode(content, 'unicode_escape')
-    if not path.exists(file_name):
-        open_file(file_name, content)
+    if not path.exists(file_path):
+        open_file(file_path, content)
     else:
-        __handle_file(file_name, 'w')(lambda f: f.write(content))
+        __handle_file(file_path, 'w')(lambda f: f.write(content))
 
 
 def process_sequence(*cmds):
@@ -176,9 +187,10 @@ def process_sequence(*cmds):
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
         out and print(__format_stdout(
-            f'Process [{i + 1}]: [{cmd[0]}]', __parse_stdout(out)))
+            f'Process [{i + 1}]:[{cmd[0]}]', __parse_stdout(out)))
         err and print(__format_stdout(
-            f'Process [{i + 1}]: [{cmd[0]}]', __parse_stdout(err)))
+            f'Process [{i + 1}]:[{cmd[0]}]', __parse_stdout(err)))
+        process.wait()
 
 
 def process_parallel(*cmds):
@@ -187,17 +199,34 @@ def process_parallel(*cmds):
     assert len(cmds) > 0
     import subprocess
     from threading import Thread
+    from time import sleep
+    import sys
+
     store = []
 
     def run(i, cmd):
+        is_done = False
+
+        def fn():
+            while not is_done:
+                print(f'>> ...[{i + 1}]:[{cmd[0]}]... <<')
+                # sys.stdout.write('.')
+                # sys.stdout.flush()
+                sleep(0.5)
         cmd = cmd.split(' ')
         process = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        th = Thread(target=fn)
+        th.start()
         out, err = process.communicate()
         out and print(__format_stdout(
-            f'Process [{i + 1}]: [{cmd[0]}]', __parse_stdout(out)))
+            f'Process [{i + 1}]:[{cmd[0]}]', __parse_stdout(out)))
         err and print(__format_stdout(
-            f'Process [{i + 1}]: [{cmd[0]}]', __parse_stdout(err)))
+            f'Process [{i + 1}]:[{cmd[0]}]', __parse_stdout(err)))
+
+        process.wait()
+        is_done = True
+        th.join()
 
     for i, cmd in enumerate(cmds):
         th = Thread(target=run, args=(i, cmd,))
@@ -208,16 +237,22 @@ def process_parallel(*cmds):
         th.join()
 
 
-def process_exit(appname=None):
-    assert appname is not None
+def process_exit(pid=None):
+    assert pid is not None
+
+    from signal import SIGKILL
+    from os import kill
+    try:
+        kill(pid, SIGKILL)
+    except Exception as _e:
+        print(str(_e))
 
 
 def file(method=None, *args, **kwargs):
     assert method is not None
 
     try:
-        print(locals()[method])
-        locals()[method](*args, **kwargs)
+        return locals()[method](*args, **kwargs)
     except KeyError as e:
         print(f'Not support method {str(e)}')
 
@@ -250,22 +285,22 @@ def __cli_app__(args, kwargs):
     args, kwargs, ops = __cli_parse_argv(args, kwargs)
     if ops is not None:
         try:
-            Store['options'][ops]()
+            output = Store['options'][ops]()
         except AttributeError:
             print(f'No option {fn}')
     elif len(args) > 0 or len(kwargs) > 0:
         fn, *args = args
         try:
-            globals()[fn](*args, **kwargs)
+            output = globals()[fn](*args, **kwargs)
         except AttributeError:
             print(f'No support method {fn}')
     else:
-        print(f'message: {MESSAGE}')
+        output = f'message: {MESSAGE}'
+    output and print(output)
 
 
 Store = {
     'options': {
-        '-h': __options_help,
         '--help': __options_help
     },
 }
