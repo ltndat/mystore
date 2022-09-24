@@ -349,4 +349,5 @@ Store = {
 
 if __name__ == '__main__':
     args, kwargs = __parse_argv()
+    print(args, kwargs)
     __cli_app__(args, kwargs)
