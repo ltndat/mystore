@@ -30,7 +30,7 @@ def __format_stdout(label='Stdout', data=None):
 
 def __parse_process_syntax(cmds):
     print(cmds)
-    result = [i.strip() for i in ''.join(cmds).split(';') if i.strip()]
+    result = [i.strip() for i in cmds if i.strip()]
     print(result)
     return result
 
@@ -248,13 +248,16 @@ def parallel(*cmds):
     assert len(cmds) > 0
     import subprocess
     from threading import Thread
+    from sys import stdout
 
     store = []
 
     def run(i, cmd):
+        def _logging():
+            stdout.write('.')
+            stdout.flush()
         cmd = cmd.split(' ')
-        iid = __set_interval(0.5, lambda: print(
-            f'>> ...[{i + 1}]:[{cmd[0]}]... <<'))
+        iid = __set_interval(0.25, _logging)
         process = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
