@@ -251,9 +251,9 @@ def parallel(*cmds):
     store = []
 
     def run(i, cmd):
+        cmd = cmd.split(' ')
         iid = __set_interval(0.5, lambda: print(
             f'>> ...[{i + 1}]:[{cmd[0]}]... <<'))
-        cmd = cmd.split(' ')
         process = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
