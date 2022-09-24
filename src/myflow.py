@@ -25,13 +25,35 @@ def __parse_argv():
 
 def __format_stdout(label='Stdout', data=None):
     assert data is not None
-    return f'--------------------------------------------\n{label}\n--------------------------------------------\n{data}'
+    return f'\n--------------------------------------------\n{label}\n--------------------------------------------\n{data}'
 
 
 def __parse_process_syntax(cmds):
     result = [i.strip() for i in ''.join(cmds).split(';') if i.strip()]
     print(result)
     return result
+
+
+def __set_interval(seconds: float = None, callback=lambda *a: a, *args, **kwargs):
+    assert seconds is not None
+    from threading import Thread
+    from time import sleep
+
+    def handler():
+        while not th.is_stop:
+            callback(*args, **kwargs)
+            sleep(seconds)
+
+    th = Thread(target=handler, args=args, kwargs=kwargs)
+    th.is_stop = False
+    th.start()
+    return th
+
+
+def __clear_interval(interval_set_id=None):
+    assert interval_set_id is not None
+    interval_set_id.is_stop = True
+    interval_set_id.join()
 
 
 def __parse_stdout(b):
@@ -157,25 +179,51 @@ def copy_folder(src=None, target=None):
         copytree(src, target)
 
 
-def edit_file(file_path=None, content=None):
-    """Edit file content
+# def edit_file(file_path=None, content=None):
+#     """Edit file content
 
-    Example:
-    ```python
-    edit_file('tmp', 'hello world')
-    ```
-    """
-    assert file_path != None and content != None
+#     Example:
+#     ```python
+#     edit_file('tmp', 'hello world')
+#     ```
+#     """
+#     assert file_path != None and content != None
+#     from os import path
+#     from codecs import decode
+#     content = decode(content, 'unicode_escape')
+#     if not path.exists(file_path):
+#         open_file(file_path, content)
+#     else:
+#         __handle_file(file_path, 'w')(lambda f: f.write(content))
+
+
+def edit_file(file_path=None, sign=None, content=None, mode='a'):
+    assert file_path != None and sign != None and content != None
     from os import path
     from codecs import decode
+    handlers = {
+        0: lambda sign, content: content.replace(sign, content),
+        1: lambda: 1,
+        'l': lambda: 1,
+    }
+    alias = {
+        'a': 0,
+        'all': 0,
+    }
+
     content = decode(content, 'unicode_escape')
+    sign = decode(sign, 'unicode_escape')
+    try:
+        content = handlers[alias[mode]](sign, content)
+    except AttributeError as e:
+        return str(e)
     if not path.exists(file_path):
         open_file(file_path, content)
     else:
         __handle_file(file_path, 'w')(lambda f: f.write(content))
 
 
-def process_sequence(*cmds):
+def sequence(*cmds):
     assert len(cmds) > 0
     cmds = __parse_process_syntax(cmds)
     assert len(cmds) > 0
@@ -193,40 +241,28 @@ def process_sequence(*cmds):
         process.wait()
 
 
-def process_parallel(*cmds):
+def parallel(*cmds):
     assert len(cmds) > 0
     cmds = __parse_process_syntax(cmds)
     assert len(cmds) > 0
     import subprocess
     from threading import Thread
-    from time import sleep
-    import sys
 
     store = []
 
     def run(i, cmd):
-        is_done = False
-
-        def fn():
-            while not is_done:
-                print(f'>> ...[{i + 1}]:[{cmd[0]}]... <<')
-                # sys.stdout.write('.')
-                # sys.stdout.flush()
-                sleep(0.5)
+        iid = __set_interval(0.5, lambda: print(
+            f'>> ...[{i + 1}]:[{cmd[0]}]... <<'))
         cmd = cmd.split(' ')
         process = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        th = Thread(target=fn)
-        th.start()
         out, err = process.communicate()
+        process.wait()
         out and print(__format_stdout(
             f'Process [{i + 1}]:[{cmd[0]}]', __parse_stdout(out)))
         err and print(__format_stdout(
             f'Process [{i + 1}]:[{cmd[0]}]', __parse_stdout(err)))
-
-        process.wait()
-        is_done = True
-        th.join()
+        __clear_interval(iid)
 
     for i, cmd in enumerate(cmds):
         th = Thread(target=run, args=(i, cmd,))
@@ -237,7 +273,7 @@ def process_parallel(*cmds):
         th.join()
 
 
-def process_exit(pid=None):
+def terminate(pid=None):
     assert pid is not None
 
     from signal import SIGKILL
