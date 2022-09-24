@@ -29,6 +29,7 @@ def __format_stdout(label='Stdout', data=None):
 
 
 def __parse_process_syntax(cmds):
+    print(cmds)
     result = [i.strip() for i in ''.join(cmds).split(';') if i.strip()]
     print(result)
     return result
