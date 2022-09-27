@@ -16,17 +16,12 @@ UNAME=$(uname)
 # prepare base
 if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
   sudo apt-get update -y
-  sudo apt-get upgrade -y
   sudo apt-get install git wget build-essential -y
   sudo apt-get upgrade -y
   sudo apt-get update -y
 elif [ "$distro" = "arch" ]; then
-  sudo pacman-key --init
-  sudo pacman-key --populate archlinux
-  sudo pacman -S archlinux-keyring
-  sudo pacman -Su
   sudo pacman -S base-devel
-  sudo pacman -Syu git wget
+  sudo pacman -Su git wget
 else
   echo "Unknown linux distro"
 fi
