@@ -8,7 +8,8 @@ wsl --update
 echo 'Default distro [arch linux]'
 try {
   if ($distro -eq "arch") {
-    scoop install archlinux
+    scoop bucket add extras
+    scoop uninstall archwsl
   } else {
     wsl --install -d $distro
   }
