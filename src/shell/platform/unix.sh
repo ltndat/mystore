@@ -16,6 +16,7 @@ UNAME=$(uname)
 # prepare base
 if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
   sudo apt-get update -y
+  sudo apt-get upgrade -y
   sudo apt-get install git wget build-essential -y
   sudo apt-get upgrade -y
   sudo apt-get update -y
