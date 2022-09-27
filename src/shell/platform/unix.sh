@@ -21,12 +21,12 @@ if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" 
   sudo apt-get upgrade -y
   sudo apt-get update -y
 elif [ "$distro" = "arch" ]; then
-  sudo pacman-key --init;
-  sudo pacman-key --populate archlinux;
-  sudo pacman -S archlinux-keyring;
-  sudo pacman -Su;
+  sudo pacman-key --init
+  sudo pacman-key --populate archlinux
+  sudo pacman -S archlinux-keyring
+  sudo pacman -Su
   sudo pacman -S base-devel
-  echo y | sudo pacman -Syu git wget
+  sudo pacman -Syu git wget
 else
   echo "Unknown linux distro"
 fi
