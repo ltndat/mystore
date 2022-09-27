@@ -9,7 +9,7 @@ echo 'Default distro [arch linux]'
 try {
   if ($distro -eq "arch") {
     scoop bucket add extras
-    scoop uninstall archwsl
+    scoop install archwsl
   } else {
     wsl --install -d $distro
   }
