@@ -1,15 +1,11 @@
 [CmdletBinding()]
 param (
-  [string]$distro
+  [string]$distro = 'arch'
 )
-
-if ($distro -eq "") {
-  echo 'Default distro [arch linux]'
-  $distro = 'arch'
-}
 
 wsl --update
 
+echo 'Default distro [arch linux]'
 try {
   if ($distro -eq "arch") {
     scoop install archlinux
