@@ -13,7 +13,7 @@ sudo useradd -m $username
 sudo passwd $username
  
 if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
-  
+  echo '' 
 elif [ "$distro" = "arch" ]; then
   sudo pacman-key --init
   sudo pacman-key --populate archlinux
