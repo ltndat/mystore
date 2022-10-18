@@ -1,5 +1,5 @@
 # get su permission
-sudo echo 'Begin'
+sudo echo 'Start setup, follow me to ask you...'
 cd ~
 
 distro=$(awk -F = '/^ID=/ {print $2}' /etc/os-release)
@@ -13,7 +13,6 @@ UNAME=$(uname)
 # 	echo "Windows"
 # fi
 
-# prepare base
 if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
   sudo apt-get update -y
   sudo apt-get upgrade -y
