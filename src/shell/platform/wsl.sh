@@ -23,4 +23,4 @@ else
   echo "Unknown linux distro"
 fi
 
-echo 'Done! Relogin require.'
+exit
