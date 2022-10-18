@@ -1,17 +1,9 @@
 # get su permission
 sudo echo 'Start setup, follow me to ask you...'
-cd ~
-
 distro=$(awk -F = '/^ID=/ {print $2}' /etc/os-release)
 UNAME=$(uname)
 
-# if [ "$UNAME" == "Linux" ] ; then
-# 	echo "Linux"
-# elif [ "$UNAME" == "Darwin" ] ; then
-# 	echo "Darwin"
-# elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-# 	echo "Windows"
-# fi
+cd ~
 
 if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
   sudo apt-get update -y
@@ -26,27 +18,8 @@ else
   echo "Unknown linux distro"
 fi
 
-# install brew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
-echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
-
-
+# Snap
 if [ "$UNAME" == "Linux" ] ; then
-  # enable systemctl
-  if [ "$WSL_DISTRO_NAME" != "" ]; then
-    cd ~
-    wget https://raw.githubusercontent.com/Homebrew/homebrew-core/86a44a0a552c673a05f11018459c9f5faae3becc/Formula/python@2.rb
-    brew install python@2.rb
-    rm python@2.rb
-  fi
-  mv /usr/bin/systemctl /usr/bin/systemctl.old
-  curl https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py > /usr/bin/systemctl
-  chmod +x /usr/bin/systemctl
-
-  # install snap
   if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
     sudo apt install snapd
   elif [ "$distro" = "arch" ]; then
@@ -55,7 +28,31 @@ if [ "$UNAME" == "Linux" ] ; then
     makepkg -si
     cd ..
     rm -rf snapd
+    sudo ln -s /var/lib/snapd/snap /snap
   fi
-  sudo systemctl enable --now snapd.socket
-  sudo ln -s /var/lib/snapd/snap /snap
 fi
+
+# install brew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
+echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
+
+# Enable Systemctl on wsl
+if [ "$WSL_DISTRO_NAME" != "" ]; then
+  brew install python
+  sudo ln -sf $(which python3) /usr/bin/python2
+  sudo mv /usr/bin/systemctl /usr/bin/systemctl.old
+  sudo curl https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py > /usr/bin/systemctl
+  sudo chmod +x /usr/bin/systemctl
+fi
+sudo systemctl enable --now snapd.socket
+
+# if [ "$UNAME" == "Linux" ] ; then
+# 	echo "Linux"
+# elif [ "$UNAME" == "Darwin" ] ; then
+# 	echo "Darwin"
+# elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+# 	echo "Windows"
+# fi
