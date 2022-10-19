@@ -18,12 +18,8 @@ try {
   return
 }
 
-wget.exe 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi'
-./wsl_update_x64.msi
-rm ./wsl_update_x64.msi
-
 wsl --set-default-version 2
 wsl --set-version $distro 2
 wsl --set-default $distro
 
-wsl
+# wsl -d $distro | curl.exe -fsSL https://raw.githubusercontent.com/ltndat/mystore/main/src/shell/platform/wsl.sh

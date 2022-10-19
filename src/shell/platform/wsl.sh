@@ -15,10 +15,15 @@ sudo passwd $username
 if [ "$distro" = "ubuntu" ] || [ "$distro" = "debian" ] || [ "$distro" = "kali" ]; then
   echo '' 
 elif [ "$distro" = "arch" ]; then
-  sudo pacman-key --init
-  sudo pacman-key --populate archlinux
-  sudo pacman -S archlinux-keyring
-  sudo pacman -Su
+  is_error="true"
+  while [ "$is_error" = "true" ]
+  do
+    {
+      sudo pacman-key --init && sudo pacman-key --populate archlinux && sudo pacman -S archlinux-keyring --noconfirm && sudo pacman -Su --noconfirm && is_error="false"
+    } || {
+      is_error="true"
+    }
+  done
 else
   echo "Unknown linux distro"
 fi

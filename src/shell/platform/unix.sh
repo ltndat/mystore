@@ -25,7 +25,7 @@ if [ "$UNAME" == "Linux" ] ; then
   elif [ "$distro" = "arch" ]; then
     git clone https://aur.archlinux.org/snapd.git
     cd snapd
-    makepkg -si
+    makepkg -si --noconfirm
     cd ..
     rm -rf snapd
     sudo ln -s /var/lib/snapd/snap /snap
@@ -44,7 +44,7 @@ if [ "$WSL_DISTRO_NAME" != "" ]; then
   brew install python
   sudo ln -sf $(which python3) /usr/bin/python2
   sudo mv /usr/bin/systemctl /usr/bin/systemctl.old
-  sudo curl https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py > /usr/bin/systemctl
+  sudo curl https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py -o /usr/bin/systemctl
   sudo chmod +x /usr/bin/systemctl
 fi
 sudo systemctl enable --now snapd.socket
